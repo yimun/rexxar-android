@@ -99,7 +99,7 @@ public class RexxarWebView extends FrameLayout implements RexxarWebViewCore.UriL
      * @param enable
      */
     public void enableRefresh(boolean enable) {
-        mSwipeRefreshLayout.setEnabled(enable);
+        mSwipeRefreshLayout.enableRefresh(enable);
     }
 
     /**

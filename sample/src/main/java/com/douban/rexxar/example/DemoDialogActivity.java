@@ -2,12 +2,13 @@ package com.douban.rexxar.example;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.Toast;
+import android.view.View;
 
 import com.douban.rexxar.example.widget.AlertDialogWidget;
 import com.douban.rexxar.example.widget.PullToRefreshWidget;
@@ -16,7 +17,6 @@ import com.douban.rexxar.example.widget.ToastWidget;
 import com.douban.rexxar.example.widget.menu.MenuItem;
 import com.douban.rexxar.example.widget.menu.MenuWidget;
 import com.douban.rexxar.view.RexxarWebView;
-import com.douban.rexxar.view.RexxarWebViewCore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,36 +28,35 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * Created by luanqian on 16/9/26.
+ * Created by linwei on 16-11-21.
  */
-public class RexxarActivity extends AppCompatActivity {
 
-    public static final String TAG = RexxarActivity.class.getSimpleName();
+public class DemoDialogActivity extends AppCompatActivity {
 
-    public static void startActivity(Activity activity, String uri) {
-        Intent intent = new Intent(activity, RexxarActivity.class);
-        intent.setData(Uri.parse(uri));
+    public static final String TAG = DemoDialogActivity.class.getSimpleName();
+
+    public static void startActivity(Activity activity) {
+        Intent intent = new Intent(activity, DemoDialogActivity.class);
         activity.startActivity(intent);
     }
 
+    @InjectView(R.id.toolbar)
+    Toolbar mToolbar;
     @InjectView(R.id.webView)
     RexxarWebView mRexxarWebView;
+    @InjectView(R.id.bottom_sheet_container)
+    View mBottomSheetContainer;
+
+    protected BottomSheetBehavior mBottomSheetBehavior;
 
     private List<MenuItem> mMenuItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.rexxar_activity);
+        setContentView(R.layout.dialog_rexxar_activity);
         ButterKnife.inject(this);
-        setTitle(R.string.title_rexxar);
-
-        final String uri = getIntent().getData().toString();
-
-        if (TextUtils.isEmpty(uri)) {
-            finish();
-            return;
-        }
+        mToolbar.setTitle(R.string.title_dialog_rexxar);
 
         // add widget
         mRexxarWebView.addRexxarWidget(new TitleWidget());
@@ -67,48 +66,34 @@ public class RexxarActivity extends AppCompatActivity {
         mRexxarWebView.addRexxarWidget(new MenuWidget());
 
         // load uri
-        mRexxarWebView.loadUri(uri);
+        mRexxarWebView.loadUrl("https://m.douban.com/");
 
-        mRexxarWebView.enableRefresh(true);
-        mRexxarWebView.setOnRefreshListener(new RexxarWebView.OnRefreshListener() {
+        mRexxarWebView.enableRefresh(false);
+
+        // bottomsheet
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContainer);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onRefresh() {
-                mRexxarWebView.loadUri(uri, new RexxarWebViewCore.UriLoadCallback() {
-                    @Override
-                    public boolean onStartLoad() {
-                        return false;
-                    }
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    finish();
+                }
+            }
 
-                    @Override
-                    public boolean onStartDownloadHtml() {
-                        return false;
-                    }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
-                    @Override
-                    public boolean onSuccess() {
-                        Toast.makeText(RexxarActivity.this, "Refresh Ok", Toast.LENGTH_SHORT)
-                                .show();
-                        mRexxarWebView.setRefreshing(false);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onFail(RexxarWebViewCore.RxLoadError error) {
-                        Toast.makeText(RexxarActivity.this, "Refresh Failed", Toast.LENGTH_SHORT)
-                                .show();
-                        mRexxarWebView.setRefreshing(false);
-                        return false;
-                    }
-                });
             }
         });
+        slideInAfterCreate();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 //        testFunc();
-    }
+        }
 
     private void testFunc() {
         try {
@@ -138,4 +123,25 @@ public class RexxarActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * 在onCreate之后上滑展示内容
+     */
+    public void slideInAfterCreate() {
+        mBottomSheetContainer.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        }, 100);
+    }
+
+    @Override
+    public void finish() {
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            super.finish();
+            overridePendingTransition(0, 0);
+        } else {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
 }

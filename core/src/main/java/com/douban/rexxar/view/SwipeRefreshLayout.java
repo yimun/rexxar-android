@@ -10,6 +10,8 @@ import com.douban.rexxar.utils.AppContext;
 
 public class SwipeRefreshLayout extends android.support.v4.widget.SwipeRefreshLayout {
 
+    private static final int DEFAULT_CIRCLE_TARGET = 64;
+
     private int mTouchSlop;
     private float mPrevX;
 
@@ -55,6 +57,20 @@ public class SwipeRefreshLayout extends android.support.v4.widget.SwipeRefreshLa
                 }
         }
         return super.onInterceptTouchEvent(event);
+    }
+
+    /**
+     * 是否启用下拉刷新
+     *
+     * Note: 如果使用setEnable(),嵌套滚动事件将无法向父级传递
+     * @param enable
+     */
+    public void enableRefresh(boolean enable) {
+        if (enable) {
+            setDistanceToTriggerSync((int) (DEFAULT_CIRCLE_TARGET * getResources().getDisplayMetrics().density));
+        } else {
+            setDistanceToTriggerSync(Integer.MAX_VALUE);
+        }
     }
 
 }

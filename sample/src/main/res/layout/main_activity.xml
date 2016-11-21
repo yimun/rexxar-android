@@ -27,4 +27,17 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/title_partial_rexxar"
         android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/dialog_rexxar_page"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:background="@color/green"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/title_dialog_rexxar"
+        android:layout_marginTop="20dp"/>
+
 </LinearLayout>

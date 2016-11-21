@@ -4,4 +4,5 @@
     <string name="title_partial_rexxar">Demo(局部rexxar)</string>
     <string name="title_rexxar">Demo(Rexxar)</string>
     <string name="success_cleard_cache">缓存清除成功</string>
+    <string name="title_dialog_rexxar">Dialog弹出式Rexxar</string>
 </resources>

@@ -3,7 +3,6 @@ package com.douban.rexxar.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.webkit.WebView;
 
 import com.douban.rexxar.utils.Utils;
 
@@ -13,7 +12,7 @@ import com.douban.rexxar.utils.Utils;
  *
  * Created by luanqian on 15/10/28.
  */
-public class SafeWebView extends WebView {
+public class SafeWebView extends NestedWebView {
 
     public SafeWebView(Context context) {
         super(context);

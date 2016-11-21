@@ -2,10 +2,8 @@ package com.douban.rexxar.example;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 
 import com.douban.rexxar.example.widget.AlertDialogWidget;
 import com.douban.rexxar.example.widget.PullToRefreshWidget;
@@ -45,9 +43,11 @@ public class DemoActivity extends AppCompatActivity {
         mRexxarWebView.addRexxarWidget(new ToastWidget());
         mRexxarWebView.addRexxarWidget(new PullToRefreshWidget());
         mRexxarWebView.addRexxarWidget(new MenuWidget());
+        mRexxarWebView.enableRefresh(false);
 
         // load uri
         mRexxarWebView.loadPartialUri("douban://douban.com/rexxar_demo");
+
     }
 
 }

@@ -41,6 +41,10 @@
         <activity android:name=".DemoActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".DemoDialogActivity"
+            android:theme="@style/AppTheme.Translucent"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
